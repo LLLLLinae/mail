@@ -13,10 +13,10 @@
   import RecommendView from "./childComps/RecommendView";
   import FeatureView from "./childComps/FeatureView";
 
-
   import NavBar from "components/common/navbar/NavBar";
   import TabControl from "components/content/tabControl/TabControl";
-  import {getHomeMultiData} from 'network/home'
+  import {getHomeMultiData} from 'network/home';
+  import {getHomeGoods} from 'network/home'
 export default {
 name: "Home",
   components:{NavBar,homeSwiper,RecommendView,FeatureView,TabControl},
@@ -32,7 +32,10 @@ name: "Home",
     }
   },
   mounted() {
-  this.getHomeMultiData()
+    this.getHomeMultiData()
+    this.getHomeGoods('pop')
+    this.getHomeGoods('new')
+    this.getHomeGoods('sell')
   },
   methods:{
   getHomeMultiData(){
@@ -42,7 +45,16 @@ name: "Home",
         this.banner = res.data.banner.list
       }
     )
-  }
+  },
+    getHomeGoods(type){
+    const page = this.goods[type].page+1
+      getHomeGoods(type,page).then(
+          (res)=>{
+            this.goods[type].list.push(...res.data)
+            this.goods[type].page++
+          }
+      )
+    }
   }
 }
 </script>
